@@ -1,0 +1,9 @@
+syntax = "proto3";
+package SocketCmd;
+
+message ClientLogin {
+	string cmdCode = 1;//命令号
+	string identity = 2;//socket对象标识
+	string timeToken = 4;//时间戳yyyy-MM-dd HH:mm:ss.fff
+	string phoneMac = 10;//app标识，单点登录
+}

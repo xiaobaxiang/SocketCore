@@ -1,0 +1,17 @@
+syntax = "proto3";
+package SocketCmd;
+
+message LoginBk {
+	string cmdCode = 1;//命令号
+	string identity = 2;//socket对象标识
+	string timeToken = 4;//时间戳yyyy-MM-dd HH:mm:ss.fff
+	int32 resultCode = 5;//操作成功1成功，其他失败（4为重新登录）
+	uint32 serverId = 6;//会按照数据的大小使用合适的字节大小
+	string serverIp = 11;//连接新服务器的Ip端口
+	repeated Light lights =14;//中继下包含的路灯
+}
+
+message Light {
+	uint32 cellAddr =12;//单元格地址
+    string lightNo =13;//路灯标识
+}

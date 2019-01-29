@@ -1,0 +1,13 @@
+syntax = "proto3";
+package SocketCmd;
+
+message Register {
+	string cmdCode = 1;//命令号
+	string identity = 2;//socket对象标识
+	//string timeToken = 4;//时间戳yyyy-MM-dd HH:mm:ss.fff
+	string iccid = 7;//4g卡标识
+	string imeiType = 8;//设备类别
+	string imeiVersion = 9;//软件版本
+	double Lng = 32;//经度
+	double Lat = 33;//纬度
+}

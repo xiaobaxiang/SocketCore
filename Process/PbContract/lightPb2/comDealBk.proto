@@ -1,0 +1,16 @@
+syntax = "proto3";
+package SocketCmd;
+
+message ComDealBk {
+	string cmdCode = 1;//命令号
+	string identity = 2;//socket对象标识
+	string oppositeId = 3;//操作对端对象标识(可选,用于控制中)
+	int32 resultCode = 5;//操作成功1成功，其他失败
+	uint32 serverId = 6;//会按照数据的大小使用合适的字节大小
+	repeated DealRes res = 38;//单元格数组
+}
+
+message DealRes {
+	int32 resultCode = 5;//操作成功1成功，其他失败
+	uint32 cellAddr = 12;//单元格地址
+}

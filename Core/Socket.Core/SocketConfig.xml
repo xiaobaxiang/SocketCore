@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<socketconfig>
+  <serverid>1</serverid>
+  <dhost></dhost>
+  <dport></dport>
+  <serverip>192.168.0.183</serverip>
+  <shost>192.168.0.183</shost>
+  <sport>9001</sport>
+  <maxconnect>10000</maxconnect>
+  <buffersize>1024</buffersize>
+</socketconfig>

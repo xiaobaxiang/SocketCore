@@ -1,0 +1,11 @@
+syntax = "proto3";
+package SocketCmd;
+
+message Waring {
+	string cmdCode = 1;//命令号
+	string identity = 2;//socket对象标识
+	string timeToken = 4;//时间戳yyyy-MM-dd HH:mm:ss.fff
+	string lightNo = 13;//路灯标识
+	string waringCode = 30;//报警码
+	string waringDesc = 31;//报警内容
+}

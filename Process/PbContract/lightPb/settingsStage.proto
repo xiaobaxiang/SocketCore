@@ -1,0 +1,18 @@
+syntax = "proto3";
+package SocketCmd;
+
+message SettingsStage {
+	string cmdCode = 1;//命令号
+	string identity = 2;//socket对象标识
+	string oppositeId = 3;//操作对端对象标识[可选]
+	string timeToken = 4;//时间戳yyyy-MM-dd HH:mm:ss.fff
+	uint32 serverId = 6;//会按照数据的大小使用合适的字节大小
+	repeated string lightNo = 13;//路灯标识
+	repeated Stage stage = 35;//阶段
+}
+
+message Stage {
+	uint32 stage =27;//阶段1,2,3,4(晨亮)
+	string stageBeginTime = 28;//阶段开始时间戳yyyy-MM-dd HH:mm:ss.fff
+	int32 value = 29;//设置值.
+}

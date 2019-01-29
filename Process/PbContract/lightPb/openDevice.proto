@@ -1,0 +1,11 @@
+syntax = "proto3";
+package SocketCmd;
+//打开中继
+message OpenDevice {
+	string cmdCode = 1;//命令号
+	string identity = 2;//socket对象标识
+	string oppositeId = 3;//操作对端对象标识[可选]
+	string timeToken = 4;//时间戳yyyy-MM-dd HH:mm:ss.fff
+	uint32 serverId = 6;//会按照数据的大小使用合适的字节大小
+	string status = 15;//路灯标识
+}

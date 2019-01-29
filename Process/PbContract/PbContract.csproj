@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{051E4B6D-91CE-4F09-A28B-E8DBD393BA96}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PbContract</RootNamespace>
+    <AssemblyName>PbContract</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Google.Protobuf, Version=3.5.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Google.Protobuf.3.5.1\lib\net45\Google.Protobuf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AddLight.cs" />
+    <Compile Include="ClientLogin.cs" />
+    <Compile Include="ComDealBk.cs" />
+    <Compile Include="DeviceStatus.cs" />
+    <Compile Include="HelloMessage.cs" />
+    <Compile Include="LoginBk.cs" />
+    <Compile Include="OpenDevice.cs" />
+    <Compile Include="OpenLight.cs" />
+    <Compile Include="OpenLightBk.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Register.cs" />
+    <Compile Include="RemoveLight.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsRange.cs" />
+    <Compile Include="SettingsStage.cs" />
+    <Compile Include="SettingsTimeSpan.cs" />
+    <Compile Include="Waring.cs" />
+    <Compile Include="WaringBk.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lightPb2\addLight.proto" />
+    <None Include="lightPb2\clientLogin.proto" />
+    <None Include="lightPb2\cmdHeader.proto" />
+    <None Include="lightPb2\comDealBk.proto" />
+    <None Include="lightPb2\deviceStatus.proto" />
+    <None Include="lightPb2\loginBk.proto" />
+    <None Include="lightPb2\openDevice.proto" />
+    <None Include="lightPb2\openLight.proto" />
+    <None Include="lightPb2\openLightBk.proto" />
+    <None Include="lightPb2\register.proto" />
+    <None Include="lightPb2\removeLight.proto" />
+    <None Include="lightPb2\settings.proto" />
+    <None Include="lightPb2\settingsRange.proto" />
+    <None Include="lightPb2\settingsStage.proto" />
+    <None Include="lightPb2\settingsTimeSpan.proto" />
+    <None Include="lightPb2\waring.proto" />
+    <None Include="lightPb2\waringBk.proto" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lightPb2\js2\addLight_pb.js" />
+    <Content Include="lightPb2\js2\clientLogin_pb.js" />
+    <Content Include="lightPb2\js2\cmdHeader_pb.js" />
+    <Content Include="lightPb2\js2\comDealBk_pb.js" />
+    <Content Include="lightPb2\js2\deviceStatus_pb.js" />
+    <Content Include="lightPb2\js2\openDevice_pb.js" />
+    <Content Include="lightPb2\js2\openLight_pb.js" />
+    <Content Include="lightPb2\js2\removeLight_pb.js" />
+    <Content Include="lightPb2\js2\settingsRange_pb.js" />
+    <Content Include="lightPb2\js2\settingsStage_pb.js" />
+    <Content Include="lightPb2\js2\settingsTimeSpan_pb.js" />
+    <Content Include="lightPb2\js2\settings_pb.js" />
+    <Content Include="lightPb2\js2\waringBk_pb.js" />
+    <Content Include="lightPb2\js\addLight_pb.js" />
+    <Content Include="lightPb2\js\clientLogin_pb.js" />
+    <Content Include="lightPb2\js\cmdHeader_pb.js" />
+    <Content Include="lightPb2\js\deviceStatus_pb.js" />
+    <Content Include="lightPb2\js\openDevice_pb.js" />
+    <Content Include="lightPb2\js\openLightBk_pb.js" />
+    <Content Include="lightPb2\js\openLight_pb.js" />
+    <Content Include="lightPb2\js\removeLight_pb.js" />
+    <Content Include="lightPb2\js\settingsRange_pb.js" />
+    <Content Include="lightPb2\js\settingsStage_pb.js" />
+    <Content Include="lightPb2\js\settingsTimeSpan_pb.js" />
+    <Content Include="lightPb2\js\settings_pb.js" />
+    <Content Include="lightPb2\js\waringBk_pb.js" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

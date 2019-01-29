@@ -1,0 +1,17 @@
+SocketCore3.zip
+Core/Socket.Core/bin/
+Core/Socket.Core/obj/
+packages/
+Process/PbContract/bin/
+Core/Socket.Process/bin/
+Core/Socket.Process/obj/Debug/Socket.Reflect.csproj.FileListAbsolute.txt
+Core/Socket.Process/obj/
+Process/PbContract/obj/Debug/PbContract.csproj.FileListAbsolute.txt
+Process/PbContract/obj/
+Process/PbContract/PbTool/
+Process/Persistence/obj/
+Process/Process/obj/
+UI/SocketTestClient/bin/
+UI/SocketTestClient/obj/
+UI/SocketTestServer/bin/
+UI/SocketTestServer/obj/

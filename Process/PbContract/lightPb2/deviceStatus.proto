@@ -1,0 +1,24 @@
+syntax = "proto3";
+package SocketCmd;
+
+message DeviceStatus {
+	string cmdCode = 1;//命令号
+	string identity = 2;//socket对象标识
+	string oppositeId = 3;//操作对端对象标识[可选]
+	//string timeToken = 4;//时间戳yyyy-MM-dd HH:mm:ss.fff
+	LightStatus lightStatus = 23;//当前中继下所有路灯的状态
+}
+
+message LightStatus {
+	uint32 cellAddr = 12;//单元格地址
+	//string lightNo = 13;//灯标识
+	string status = 15;//灯状态
+    int32 lightPw = 16;//功率
+	int32 lightLu = 17;//光伏电压
+    int32 lightLi = 18;//光伏电流
+	int32 lightBu = 19;//电池电压
+	int32 lightBt= 20;//电池温度
+	int32 lightUu = 21;//负载电压
+	int32 lightUi = 22;//负载电流
+	repeated int32 lightBgus = 34;//电池组电压
+}
