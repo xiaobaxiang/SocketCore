@@ -70,12 +70,12 @@ namespace Socket.Core
         /// <summary>
         /// 开启客户端socket
         /// </summary>
-        public static void ClientSocketStarting(Action<ISocketConnection> conncetCallback = null, Action<ISocketConnection> disConnectCallback = null, Action<byte[], ISocketConnection> receiveCallback = null
+        public static void ClientSocketStarting(Action<ISocketConnection> connectCallback = null, Action<ISocketConnection> disConnectCallback = null, Action<byte[], ISocketConnection> receiveCallback = null
             , Action<ISocketConnection> sendCallback = null, Action<string> showMsg = null, Action<Exception> socketExceptionCallback = null)
         {
             SocketConnectConfig sktconfig = new SocketConnectConfig()
             {
-                ConnectCallback = conncetCallback,
+                ConnectCallback = connectCallback,
                 DisConnectCallback = disConnectCallback,
                 ReceiveCallback = receiveCallback,
                 SendCallback = sendCallback,
