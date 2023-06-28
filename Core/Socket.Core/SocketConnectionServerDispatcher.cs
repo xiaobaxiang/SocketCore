@@ -174,14 +174,25 @@ namespace Socket.Core
         /// <param name="ar"></param>
         private static void AcceptCallback(IAsyncResult ar)
         {
-            if (_cancellationTocken.IsCancellationRequested) return;
-            var ssocketConfig = ar.AsyncState as SocketConnectConfig;
-            var client = ssocketConfig?.ServerSocket?.EndAccept(ar);
-            ssocketConfig?.ServerSocket?.BeginAccept(AcceptCallback, ssocketConfig);//继续监听其他请求
-            var currSocketConnection = new SocketConnection(client);
-            currSocketConnection.ReceiveData();
-            Sktconfig?.AcceptCallback?.Invoke(currSocketConnection);
-            //LogMsg(client?.LocalEndPoint.ToString(), client?.RemoteEndPoint.ToString(), $"accept remote {client?.RemoteEndPoint}\r\n");
+            try
+            {
+                if (_cancellationTocken.IsCancellationRequested) return;
+                var ssocketConfig = ar.AsyncState as SocketConnectConfig;
+                var client = ssocketConfig?.ServerSocket?.EndAccept(ar);
+                ssocketConfig?.ServerSocket?.BeginAccept(AcceptCallback, ssocketConfig);//继续监听其他请求
+                var currSocketConnection = new SocketConnection(client);
+                currSocketConnection.ReceiveData();
+                Sktconfig?.AcceptCallback?.Invoke(currSocketConnection);
+                //LogMsg(client?.LocalEndPoint.ToString(), client?.RemoteEndPoint.ToString(), $"accept remote {client?.RemoteEndPoint}\r\n");
+            }
+            catch (SocketException sktex)
+            {
+                SocketException(null, sktex);
+            }
+            catch (Exception ex)
+            {
+                Exception(ex);
+            }
         }
 
         public static void Dispose(Action disposeCallback = null)
