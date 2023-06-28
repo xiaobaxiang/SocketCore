@@ -126,7 +126,7 @@ namespace Socket.Core
                 if (handler != null && !handler.Connected) //当近端主动Disconnect时会触发
                 {
                     Sktconfig?.DisConnectCallback?.Invoke(this);
-                    LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"disconnect remote {handler.RemoteEndPoint}\r\n");
+                    //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"disconnect remote {handler.RemoteEndPoint}\r\n");
                     return;
                 }
                 //最大是设置的msgbuffer的长度，如果发送的数据超过了buffer的长度就分批次接收
@@ -159,14 +159,105 @@ namespace Socket.Core
                             //返回websocket握手包
                             handler.BeginSend(newHandshake, 0, newHandshake.Length, 0, SendCallback, null);
                             handler.BeginReceive(srb.Buffer, 0, BufferSize, 0, ReceiveCallback, srb);
-                            LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"from remote {handler.RemoteEndPoint} webSocket first session receive data [{receiveText}]\r\n");
+                            //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"from remote {handler.RemoteEndPoint} webSocket first session receive data [{receiveText}]\r\n");
                             return;
                         }
                         #endregion
                     }
                     else if (SocketConnectType == SocketConnectType.WebSocket)
                     {//websocket解析明文内容
-                        receiveBytes = new DataFrame(receiveBytes).Content;
+                        //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"beforeReceiveBytes:" + BitConverter.ToString(receiveBytes));
+
+                        if (srb.Buffers.Count == 0)
+                        {
+                            var data = receiveBytes;
+                            var length = (data[1] & 127);
+                            var isMasked = (data[1] & 128) != 0;
+
+                            var index = 2;
+                            int payloadLength;
+
+                            if (length == 127)
+                            {
+                                if (data.Length < index + 8)
+                                    return; //Not complete
+                                payloadLength = data.Skip(index).Take(8).ToArray().ToLittleEndianInt();
+                                index += 8;
+                            }
+                            else if (length == 126)
+                            {
+                                if (data.Length < index + 2)
+                                    return; //Not complete
+                                payloadLength = data.Skip(index).Take(2).ToArray().ToLittleEndianInt();
+                                index += 2;
+                            }
+                            else
+                            {
+                                payloadLength = length;
+                            }
+                            if (isMasked) index = index + 4;
+                            if ((receiveBytes.Length < index + payloadLength))//接收首包断包情况
+                            {
+                                handler.BeginReceive(srb.Buffer, 0, BufferSize, 0, ReceiveCallback, srb);
+                                srb.Buffers.AddRange(receiveBytes);
+                                //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"首次获取数据有断包{receiveBytes.Length}--{index + payloadLength}");
+                                return;
+                            }
+                            else//一次性接收完整数据包
+                            {
+                                //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"appendBeforeParseBytes:" + BitConverter.ToString(receiveBytes));
+                                receiveBytes = new DataFrame(receiveBytes).Content;
+                                //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"afterReceiveBytes:" + BitConverter.ToString(receiveBytes));
+                                handler.BeginReceive(srb.Buffer, 0, BufferSize, 0, ReceiveCallback, srb);
+                            }
+                        }
+                        else
+                        {
+                            var data = srb.Buffers;
+                            var length = (data[1] & 127);
+                            var isMasked = (data[1] & 128) != 0;
+
+                            var index = 2;
+                            int payloadLength;
+
+                            if (length == 127)
+                            {
+                                if (data.Count < index + 8)
+                                    return; //Not complete
+                                payloadLength = data.Skip(index).Take(8).ToArray().ToLittleEndianInt();
+                                index += 8;
+                            }
+                            else if (length == 126)
+                            {
+                                if (data.Count < index + 2)
+                                    return; //Not complete
+                                payloadLength = data.Skip(index).Take(2).ToArray().ToLittleEndianInt();
+                                index += 2;
+                            }
+                            else
+                            {
+                                payloadLength = length;
+                            }
+                            if (isMasked) index = index + 4;
+                            srb.Buffers.AddRange(receiveBytes);
+                            if ((srb.Buffers.Count < index + payloadLength))
+                            {
+                                //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"以后获取数据有断包{srb.Buffers.Count}--{index + payloadLength}");
+                                handler.BeginReceive(srb.Buffer, 0, BufferSize, 0, ReceiveCallback, srb);
+                                return;
+                            }
+                            else
+                            {
+                                receiveBytes = srb.Buffers.ToArray();
+                                srb.Buffers.Clear();
+                                //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"appendBeforeParseBytes:" + BitConverter.ToString(receiveBytes));
+                                receiveBytes = new DataFrame(receiveBytes).Content;
+                                //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"appendAfterReceiveBytes:" + BitConverter.ToString(receiveBytes));
+                            }
+                        }
+                        
+                        //receiveBytes = new DataFrame(receiveBytes).Content;
+                        //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"afterReceiveBytes:" + BitConverter.ToString(receiveBytes));
                     }
 
                     #region 解析每一个数据包
@@ -179,7 +270,7 @@ namespace Socket.Core
                         //下面是正常业务逻辑处理
                         var bytemsg = bytepackage.Dequeue();
                         if(bytemsg.Length==0)continue;
-                        LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"from {handler.RemoteEndPoint} receive [{ BitConverter.ToString(bytemsg)}]\r\n");
+                        //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"from {handler.RemoteEndPoint} receive [{ BitConverter.ToString(bytemsg)}]\r\n");
                         
                         if (srb.MsgRecevieCallBack != null)
                         {
@@ -201,7 +292,7 @@ namespace Socket.Core
                     if (handler != null)
                     {
                         Sktconfig?.DisConnectCallback?.Invoke(this);
-                        LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"remote {handler.RemoteEndPoint} has close\r\n");
+                        //LogMsg(handler.LocalEndPoint.ToString(), handler.RemoteEndPoint.ToString(), $"remote {handler.RemoteEndPoint} has close\r\n");
                     }
                 }
                 LastSessionTime = DateTime.Now;
@@ -218,7 +309,6 @@ namespace Socket.Core
 
         /// <summary>
         /// 将prePartialReceiveByte中的字节与本次取出来的字节拼接在一起，最后返回可用部分消息
-        /// 现在直接返回第一包完整的数据
         /// </summary>
         /// <param name="receiveByte">本次从buffer中取出来的字节</param>
         /// <returns></returns>
@@ -237,23 +327,29 @@ namespace Socket.Core
             }
             else
                 return queePackage;
-
-            int takeLength = 0;
-            while (takeLength < receiveByte.Length)
+            
+            while (msgLength <= receiveByte.Length)
             {
-                var takeBytes = receiveByte.Skip(takeLength + 4).Take(msgLength - 4).ToArray();
-                takeLength += takeBytes.Length + 4;
-                if (takeLength == msgLength && takeBytes[takeBytes.Length - 2] == 0x0D &&takeBytes[takeBytes.Length - 1] == 0x0A)
+                var takeBytes = receiveByte.Skip(4).Take(msgLength - 4).ToArray();
+                if (takeBytes.Length + 4 == msgLength && takeBytes[takeBytes.Length - 2] == 0x0D && takeBytes[takeBytes.Length - 1] == 0x0A)
                     queePackage.Enqueue(takeBytes.Take(takeBytes.Length - 2).ToArray());
-                else break;
-                receiveByte = receiveByte.Skip(takeLength).ToArray();
+                else
+                {
+                    msgLength = int.MaxValue;
+                    break;
+                }
+                receiveByte = receiveByte.Skip(msgLength).ToArray();
                 if (receiveByte.Any(b => b == 0x0A))
                 {
                     byte[] byts = new byte[4];
                     Array.Copy(receiveByte, 0, byts, 0, 4);
                     msgLength = BitConverter.ToInt32(byts, 0);
                 }
-                else break;
+                else
+                {
+                    msgLength = int.MaxValue;
+                    break;
+                }
             }
             return queePackage;
         }
@@ -336,7 +432,7 @@ namespace Socket.Core
             try
             {
 #if DEBUG
-                LogMsg(ConnectSocket.LocalEndPoint.ToString(), ConnectSocket.RemoteEndPoint.ToString(), $"to {ConnectSocket.RemoteEndPoint} data [{BitConverter.ToString(byteData)}]\r\n");
+                //LogMsg(ConnectSocket.LocalEndPoint.ToString(), ConnectSocket.RemoteEndPoint.ToString(), $"to {ConnectSocket.RemoteEndPoint} data [{BitConverter.ToString(byteData)}]\r\n");
 #endif
                 Sktconfig?.BeforeSend?.Invoke(byteData,this);//发送之前的操作
                 var sendBytes = BitConverter.GetBytes(byteData.Length+6).Concat(byteData).ToArray().Concat(new byte[] {0x0D,0x0A}).ToArray();
@@ -461,5 +557,50 @@ namespace Socket.Core
         }
         #endregion
 
+    }
+    public enum FrameType : byte
+    {
+        Continuation,
+        Text,
+        Binary,
+        Close = 8,
+        Ping = 9,
+        Pong = 10,
+    }
+
+    public static class IntExtensions
+    {
+        public static byte[] ToBigEndianBytes<T>(this int source)
+        {
+            byte[] bytes;
+
+            var type = typeof(T);
+            if (type == typeof(ushort))
+                bytes = BitConverter.GetBytes((ushort)source);
+            else if (type == typeof(ulong))
+                bytes = BitConverter.GetBytes((ulong)source);
+            else if (type == typeof(int))
+                bytes = BitConverter.GetBytes(source);
+            else
+                throw new InvalidCastException("Cannot be cast to T");
+
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(bytes);
+            return bytes;
+        }
+
+        public static int ToLittleEndianInt(this byte[] source)
+        {
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(source);
+
+            if (source.Length == 2)
+                return BitConverter.ToUInt16(source, 0);
+
+            if (source.Length == 8)
+                return (int)BitConverter.ToUInt64(source, 0);
+
+            throw new ArgumentException("Unsupported Size");
+        }
     }
 }

@@ -181,7 +181,7 @@ namespace Socket.Core
             var currSocketConnection = new SocketConnection(client);
             currSocketConnection.ReceiveData();
             Sktconfig?.AcceptCallback?.Invoke(currSocketConnection);
-            LogMsg(client?.LocalEndPoint.ToString(), client?.RemoteEndPoint.ToString(), $"accept remote {client?.RemoteEndPoint}\r\n");
+            //LogMsg(client?.LocalEndPoint.ToString(), client?.RemoteEndPoint.ToString(), $"accept remote {client?.RemoteEndPoint}\r\n");
         }
 
         public static void Dispose(Action disposeCallback = null)

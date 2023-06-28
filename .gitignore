@@ -15,3 +15,5 @@ UI/SocketTestClient/bin/
 UI/SocketTestClient/obj/
 UI/SocketTestServer/bin/
 UI/SocketTestServer/obj/
+.SVN/
+.VS/

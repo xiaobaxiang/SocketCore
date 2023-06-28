@@ -66,9 +66,13 @@ namespace Socket.Core.Model
     public class SocketReceiveBack
     {
         /// <summary>
-        /// 客户端连接的socket
+        /// 客户端连接的buffer
         /// </summary>
         public byte[] Buffer;
+        /// <summary>
+        /// websocket断包缓存
+        /// </summary>
+        public List<byte> Buffers = new List<byte>();
         /// <summary>
         /// 处理接收byte后的回调
         /// </summary>
